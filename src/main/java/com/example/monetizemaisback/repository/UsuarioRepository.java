@@ -1,5 +1,6 @@
-package com.example.monetizemaisback;
+package com.example.monetizemaisback.repository;
 
+import com.example.monetizemaisback.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
