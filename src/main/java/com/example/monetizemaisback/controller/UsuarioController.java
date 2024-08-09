@@ -22,19 +22,19 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
 
-    @PostMapping("/novo")
+    @PostMapping("/newUser")
     public Usuario criarNovoUsuario(@Valid @RequestBody Usuario novoUsuario) {
         logger.info("Creating new user with data: {}", novoUsuario);
         return usuarioRepository.save(novoUsuario);
     }
 
-    @GetMapping
+    @GetMapping("getAllUsers")
     public List<Usuario> getAllUsuarios() {
         logger.info("Fetching all users");
         return usuarioRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("getUser/{id}")
     public Optional<Usuario> getUsuarioById(@PathVariable Long id) {
         logger.info("Fetching user with ID: {}", id);
         return usuarioRepository.findById(id);
