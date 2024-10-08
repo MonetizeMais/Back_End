@@ -15,7 +15,7 @@ FROM openjdk:21-jdk-slim
 EXPOSE 8080
 
 # Copiar o arquivo JAR gerado na etapa de build para o contêiner final
-COPY --from=build /target/investLab-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /target/MonetizeMaisBack-0.0.1-SNAPSHOT.jar app.jar
 
 # Definir o entrypoint para executar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
