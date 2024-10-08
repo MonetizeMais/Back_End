@@ -12,6 +12,7 @@ import com.example.monetizemaisback.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     private final InfoUsuarioRepository perguntaUsuarioRepository;
@@ -33,50 +33,55 @@ public class UsuarioController {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
 
     @PostMapping("/newUser")
-    @Operation(summary = "Exemplo de operação", responses = {
-            @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
+    @Operation(summary = "Create a new user", responses = {
+            @ApiResponse(responseCode = "200", description = "User created successfully")
     })
-    public Usuario newUsuario(@RequestBody Usuario novoUsuario) {
+    public Usuario createNewUser(@RequestBody Usuario novoUsuario) {
         logger.info("Creating new user with data: {}", novoUsuario);
         return usuarioRepository.save(novoUsuario);
     }
 
     @GetMapping("/getAllUsers")
-    public List<Usuario> getAllUsuarios() {
+    public List<Usuario> getAllUsers() {
         logger.info("Fetching all users");
         return usuarioRepository.findAll();
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<Usuario> getUsuarioById(@PathVariable Long id) {
+    public ResponseEntity<Usuario> getUserById(@PathVariable Long id) {
         logger.info("Fetching user with ID: {}", id);
-        return usuarioRepository.findById(id);
+        return usuarioRepository.findById(id)
+                .map(user -> ResponseEntity.ok(user))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/newQuestion")
-    public Perguntas newPergunta(@RequestBody Perguntas novaPergunta) {
+    public Perguntas createNewQuestion(@RequestBody Perguntas novaPergunta) {
         logger.info("Creating new question with data: {}", novaPergunta);
         return perguntasRepository.save(novaPergunta);
     }
+
     @GetMapping("/getQuestion/{id}")
-    public Optional<Perguntas> getPerguntaById(@PathVariable Long id) {
+    public ResponseEntity<Perguntas> getQuestionById(@PathVariable Long id) {
         logger.info("Fetching question with ID: {}", id);
-        return perguntasRepository.findById(id);
+        return perguntasRepository.findById(id)
+                .map(question -> ResponseEntity.ok(question))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/updatePassword")
-    public Optional<Usuario> newPassword(@RequestBody UpdatePassword updatePassword) {
+    public ResponseEntity<Usuario> updatePassword(@RequestBody UpdatePassword updatePassword) {
         Optional<Usuario> user = usuarioRepository.findById(updatePassword.getId());
         if (user.isPresent()) {
             Usuario existingUser = user.get();
             existingUser.setSenha(updatePassword.getPassword());
-            return Optional.of(usuarioRepository.save(existingUser));
+            return ResponseEntity.ok(usuarioRepository.save(existingUser));
         }
-        return Optional.empty();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/infoUser")
-    public PerguntaUsuarioLogin newInfoUser(@RequestBody PerguntaUsuarioLogin perguntaUsuarioLogin) {
+    public PerguntaUsuarioLogin createNewInfoUser(@RequestBody PerguntaUsuarioLogin perguntaUsuarioLogin) {
         logger.info("Creating new info user with data: {}", perguntaUsuarioLogin);
         return perguntaUsuarioRepository.save(perguntaUsuarioLogin);
     }
