@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@CrossOrigin(value = "*", origins = "*")
+@CrossOrigin(origins = "*", value = "*", allowedHeaders = "*")
 public class MonetizeMaisBackApplication {
 
     public static void main(String[] args) {
