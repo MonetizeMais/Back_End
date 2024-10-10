@@ -33,5 +33,4 @@ public class LogUsuario {
 
     @Column(name = "cdescricao", length = 255)
     private String descricao;
-
 }
