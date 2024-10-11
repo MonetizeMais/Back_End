@@ -9,6 +9,7 @@ import com.example.monetizemaisback.repository.PerguntasRepository;
 import com.example.monetizemaisback.repository.UsuarioRepository;
 
 
+import com.example.monetizemaisback.request.UserLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,17 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioRepository.save(existingUser));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/userLogin")
+    public Boolean login( @RequestBody UserLoginRequest userLoginRequest) {
+        Optional<Usuario> userOptional = usuarioRepository.findById(userLoginRequest.getNcdUsuario());
+
+        if (userOptional.isPresent()) {
+            Usuario user = userOptional.get();
+            return user.getSenha().equals(userLoginRequest.getSenha());
+        }
+        return false;
     }
 
     @PostMapping("/infoUser")
