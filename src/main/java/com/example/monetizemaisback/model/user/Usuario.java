@@ -15,11 +15,9 @@ import lombok.Setter;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ou AUTO, dependendo da configuração do banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nCdUsuario", nullable = false)
     private Long nCdUsuario;
-
-    private Long id;
 
     @Column(name = "cnmusuario", nullable = false, length = 200)
     private String nome;
