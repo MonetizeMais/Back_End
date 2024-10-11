@@ -1,9 +1,6 @@
 package com.example.monetizemaisback.model.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +15,10 @@ import lombok.Setter;
 public class Usuario {
 
     @Id
-    @Column(name = "ncdusuario")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ou AUTO, dependendo da configuração do banco de dados
+    @Column(name = "nCdUsuario", nullable = false)
+    private Long nCdUsuario;
+
     private Long id;
 
     @Column(name = "cnmusuario", nullable = false, length = 200)
