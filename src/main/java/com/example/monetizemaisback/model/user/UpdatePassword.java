@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdatePassword {
 
-    private Long id;
+    private Long nCdUsuario;
     private String password;
 
 }
