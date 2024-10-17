@@ -72,7 +72,7 @@ public class UsuarioController {
 
     @PostMapping("/updatePassword")
     public ResponseEntity<Usuario> updatePassword(@RequestBody UpdatePassword updatePassword) {
-        Optional<Usuario> user = usuarioRepository.findById(updatePassword.getId());
+        Optional<Usuario> user = usuarioRepository.findById(updatePassword.getNCdUsuario());
         if (user.isPresent()) {
             Usuario existingUser = user.get();
             existingUser.setSenha(updatePassword.getPassword());
@@ -81,15 +81,24 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/userLogin")
-    public Boolean login( @RequestBody UserLoginRequest userLoginRequest) {
-        Optional<Usuario> userOptional = usuarioRepository.findById(userLoginRequest.getNcdUsuario());
+    @PostMapping("/userLogin")
+    public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
+        logger.info("Attempting login with email/apelido: {}", userLoginRequest.getEmail());
+        Optional<Usuario> userOptional = usuarioRepository.findByEmailOrApelido(userLoginRequest.getEmail(), userLoginRequest.getEmail());
 
         if (userOptional.isPresent()) {
             Usuario user = userOptional.get();
-            return user.getSenha().equals(userLoginRequest.getSenha());
+            if (user.getSenha().equals(userLoginRequest.getSenha())) {
+                logger.info("Login successful for email/apelido: {}", userLoginRequest.getEmail());
+                return ResponseEntity.ok("Login successful");
+            } else {
+                logger.warn("Login failed: incorrect password for email/apelido: {}", userLoginRequest.getEmail());
+                return ResponseEntity.status(401).body("Incorrect password");
+            }
+        } else {
+            logger.warn("Login failed: no user found with email/apelido: {}", userLoginRequest.getEmail());
+            return ResponseEntity.status(404).body("User not found");
         }
-        return false;
     }
 
     @PostMapping("/infoUser")
