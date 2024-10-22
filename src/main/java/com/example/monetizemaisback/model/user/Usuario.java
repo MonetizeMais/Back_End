@@ -40,6 +40,9 @@ public class Usuario {
     @Column(name = "icoin")
     private Integer coin;
 
+    @Column(name = "pontos")
+    private Integer pontos;
+
     @Column(name = "cfotoperfil", length = 255)
     private String fotoPerfil;
 }
