@@ -2,26 +2,21 @@ package com.example.monetizemaisback.controller;
 
 import com.example.monetizemaisback.model.questions.Perguntas;
 import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
-import com.example.monetizemaisback.model.user.UpdatePassword;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.InfoUsuarioRepository;
 import com.example.monetizemaisback.repository.PerguntasRepository;
 import com.example.monetizemaisback.repository.UsuarioRepository;
-
-
 import com.example.monetizemaisback.request.UserLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,17 +65,6 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/updatePassword")
-    public ResponseEntity<Usuario> updatePassword(@RequestBody UpdatePassword updatePassword) {
-        Optional<Usuario> user = usuarioRepository.findById(updatePassword.getNCdUsuario());
-        if (user.isPresent()) {
-            Usuario existingUser = user.get();
-            existingUser.setSenha(updatePassword.getPassword());
-            return ResponseEntity.ok(usuarioRepository.save(existingUser));
-        }
-        return ResponseEntity.notFound().build();
-    }
-
     @PostMapping("/userLogin")
     public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
         logger.info("Attempting login with email/apelido: {}", userLoginRequest.getEmail());
@@ -99,6 +83,12 @@ public class UsuarioController {
             logger.warn("Login failed: no user found with email/apelido: {}", userLoginRequest.getEmail());
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    @GetMapping("/getAllUsersByPoints")
+    public List<Usuario> getAllUsersByPoints() {
+        logger.info("Fetching all users ordered by points");
+        return usuarioRepository.findAllByOrderByPontosDesc();
     }
 
     @PostMapping("/infoUser")
