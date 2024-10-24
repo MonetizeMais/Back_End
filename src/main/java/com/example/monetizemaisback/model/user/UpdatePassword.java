@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class UpdatePassword {
-    private Long nCdUsuario;
-    private String email;
+    private Long id;
     private String password;
 }

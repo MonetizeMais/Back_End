@@ -2,6 +2,7 @@ package com.example.monetizemaisback.controller;
 
 import com.example.monetizemaisback.model.questions.Perguntas;
 import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
+import com.example.monetizemaisback.model.user.UpdatePassword;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.InfoUsuarioRepository;
 import com.example.monetizemaisback.repository.PerguntasRepository;
@@ -96,4 +97,27 @@ public class UsuarioController {
         logger.info("Creating new info user with data: {}", perguntaUsuarioLogin);
         return perguntaUsuarioRepository.save(perguntaUsuarioLogin);
     }
+
+    @PutMapping("/updatePassword")
+    @Operation(summary = "Update user password", responses = {
+            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<String> updatePassword(@RequestBody UpdatePassword updatePasswordRequest) {
+        logger.info("Updating password for user ID: {}", updatePasswordRequest.getId());
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(updatePasswordRequest.getId());
+
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setSenha(updatePasswordRequest.getPassword());
+            usuarioRepository.save(usuario);
+
+            logger.info("Password updated successfully for user ID: {}", updatePasswordRequest.getId());
+            return ResponseEntity.ok("Password updated successfully");
+        } else {
+            logger.warn("User not found with ID: {}", updatePasswordRequest.getId());
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
+
 }
