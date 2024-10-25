@@ -33,11 +33,23 @@ public class UsuarioController {
 
     @PostMapping("/newUser")
     @Operation(summary = "Create a new user", responses = {
-            @ApiResponse(responseCode = "200", description = "User created successfully")
+            @ApiResponse(responseCode = "200", description = "User created successfully"),
+            @ApiResponse(responseCode = "401", description = "Email or apelido already exists")
     })
-    public Usuario createNewUser(@RequestBody Usuario novoUsuario) {
+    public ResponseEntity<String> createNewUser(@RequestBody Usuario novoUsuario) {
         logger.info("Creating new user with data: {}", novoUsuario);
-        return usuarioRepository.save(novoUsuario);
+        if (usuarioRepository.findByEmail(novoUsuario.getEmail()).isPresent()) {
+            logger.warn("Email already exists: {}", novoUsuario.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email já cadastrado");
+        }
+
+        if (usuarioRepository.findByApelido(novoUsuario.getApelido()).isPresent()) {
+            logger.warn("Apelido already exists: {}", novoUsuario.getApelido());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Apelido já cadastrado");
+        }
+
+        usuarioRepository.save(novoUsuario);
+        return ResponseEntity.ok("User created successfully");
     }
 
     @GetMapping("/getAllUsers")
@@ -150,27 +162,4 @@ public class UsuarioController {
             return ResponseEntity.status(404).body("User not found");
         }
     }
-
-    @GetMapping("/checkEmailOrApelido")
-    @Operation(summary = "Check if email or apelido exists for login", responses = {
-            @ApiResponse(responseCode = "200", description = "Verification performed successfully"),
-            @ApiResponse(responseCode = "401", description = "Email or apelido already exists")
-    })
-    public ResponseEntity<String> checkEmailOrApelido(@RequestParam String email, @RequestParam String apelido) {
-        logger.info("Checking existence of email: {} and apelido: {}", email, apelido);
-
-        if (usuarioRepository.findByEmail(email).isPresent()) {
-            logger.warn("Email already exists: {}", email);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email já cadastrado");
-        }
-
-        if (usuarioRepository.findByApelido(apelido).isPresent()) {
-            logger.warn("Apelido already exists: {}", apelido);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Apelido já cadastrado");
-        }
-
-        logger.info("Email and apelido are available: email={}, apelido={}", email, apelido);
-        return ResponseEntity.ok("Email e apelido estão disponíveis");
-    }
-
 }
