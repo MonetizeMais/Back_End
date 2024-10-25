@@ -7,6 +7,7 @@ import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.InfoUsuarioRepository;
 import com.example.monetizemaisback.repository.PerguntasRepository;
 import com.example.monetizemaisback.repository.UsuarioRepository;
+import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
 import com.example.monetizemaisback.request.UserLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -104,18 +105,18 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePassword updatePasswordRequest) {
-        logger.info("Updating password for user ID: {}", updatePasswordRequest.getId());
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(updatePasswordRequest.getId());
+        logger.info("Updating password for user ID: {}", updatePasswordRequest.getEmail());
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(updatePasswordRequest.getEmail());
 
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setSenha(updatePasswordRequest.getPassword());
             usuarioRepository.save(usuario);
 
-            logger.info("Password updated successfully for user ID: {}", updatePasswordRequest.getId());
+            logger.info("Password updated successfully for user ID: {}", updatePasswordRequest.getEmail());
             return ResponseEntity.ok("Password updated successfully");
         } else {
-            logger.warn("User not found with ID: {}", updatePasswordRequest.getId());
+            logger.warn("User not found with ID: {}", updatePasswordRequest.getEmail());
             return ResponseEntity.status(404).body("User not found");
         }
     }
@@ -126,4 +127,27 @@ public class UsuarioController {
         boolean userExists = usuarioRepository.findByEmail(email).isPresent();
         return ResponseEntity.ok(userExists);
     }
+
+    @PutMapping("/updateProfilePicture")
+    @Operation(summary = "Update user profile picture", responses = {
+            @ApiResponse(responseCode = "200", description = "Profile picture updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<String> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
+        logger.info("Updating profile picture for user ID: {}", updateRequest.getId());
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(updateRequest.getId());
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setFotoPerfil(updateRequest.getFotoPerfil());
+            usuarioRepository.save(usuario);
+
+            logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getId());
+            return ResponseEntity.ok("Profile picture updated successfully");
+        } else {
+            logger.warn("User not found with ID: {}", updateRequest.getId());
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
+
 }

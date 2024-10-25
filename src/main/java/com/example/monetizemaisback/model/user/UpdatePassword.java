@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class UpdatePassword {
-    private Long id;
+    private String email;
     private String password;
 }
