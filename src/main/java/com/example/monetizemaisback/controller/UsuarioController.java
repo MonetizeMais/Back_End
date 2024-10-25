@@ -12,6 +12,7 @@ import com.example.monetizemaisback.request.UserLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.slf4j.Logger;
@@ -148,6 +149,28 @@ public class UsuarioController {
             logger.warn("User not found with ID: {}", updateRequest.getId());
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    @GetMapping("/checkEmailOrApelido")
+    @Operation(summary = "Check if email or apelido exists for login", responses = {
+            @ApiResponse(responseCode = "200", description = "Verification performed successfully"),
+            @ApiResponse(responseCode = "401", description = "Email or apelido already exists")
+    })
+    public ResponseEntity<String> checkEmailOrApelido(@RequestParam String email, @RequestParam String apelido) {
+        logger.info("Checking existence of email: {} and apelido: {}", email, apelido);
+
+        if (usuarioRepository.findByEmail(email).isPresent()) {
+            logger.warn("Email already exists: {}", email);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email já cadastrado");
+        }
+
+        if (usuarioRepository.findByApelido(apelido).isPresent()) {
+            logger.warn("Apelido already exists: {}", apelido);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Apelido já cadastrado");
+        }
+
+        logger.info("Email and apelido are available: email={}, apelido={}", email, apelido);
+        return ResponseEntity.ok("Email e apelido estão disponíveis");
     }
 
 }
