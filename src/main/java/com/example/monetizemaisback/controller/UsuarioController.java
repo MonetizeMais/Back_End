@@ -120,4 +120,10 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/checkUserByEmail/{email}")
+    public ResponseEntity<Boolean> checkUserByEmail(@PathVariable String email) {
+        logger.info("Checking if user exists with email: {}", email);
+        boolean userExists = usuarioRepository.findByEmail(email).isPresent();
+        return ResponseEntity.ok(userExists);
+    }
 }
