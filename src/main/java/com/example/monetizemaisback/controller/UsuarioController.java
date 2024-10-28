@@ -66,6 +66,14 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/getUser/{email}")
+    public ResponseEntity<Usuario> getUserByEmail(@PathVariable String email) {
+        logger.info("Fetching user with email: {}", email);
+        return usuarioRepository.findByEmail(email)
+                .map(user -> ResponseEntity.ok(user))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/newQuestion")
     public Perguntas createNewQuestion(@RequestBody Perguntas novaPergunta) {
         logger.info("Creating new question with data: {}", novaPergunta);
