@@ -7,6 +7,7 @@ import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.InfoUsuarioRepository;
 import com.example.monetizemaisback.repository.PerguntasRepository;
 import com.example.monetizemaisback.repository.UsuarioRepository;
+import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
 import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
 import com.example.monetizemaisback.request.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
@@ -142,4 +143,24 @@ public class UsuarioService {
         logger.info("Checking if user exists with email: {}", email);
         return usuarioRepository.findByEmail(email).isPresent();
     }
+
+    public ResponseEntity<String> updateEmailAndApelido(Long id, UpdateEmailApelidoRequest updateRequest) {
+        logger.info("Updating email and apelido for user ID: {}", id);
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isEmpty()) {
+            logger.warn("User not found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        usuario.setEmail(updateRequest.getEmail());
+        usuario.setApelido(updateRequest.getApelido());
+        usuarioRepository.save(usuario);
+
+        logger.info("Email and apelido updated successfully for user ID: {}", id);
+        return ResponseEntity.ok("Email and apelido updated successfully");
+    }
+
 }

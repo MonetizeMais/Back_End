@@ -5,6 +5,7 @@ import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
 import com.example.monetizemaisback.model.user.UpdatePassword;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.UsuarioRepository;
+import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
 import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
 import com.example.monetizemaisback.request.UserLoginRequest;
 import com.example.monetizemaisback.service.UsuarioService;
@@ -100,4 +101,14 @@ public class UsuarioController {
     public ResponseEntity<String> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
         return usuarioService.updateProfilePicture(updateRequest);
     }
+
+
+    @PutMapping("/updateEmailApelido/{id}")
+    @Operation(summary = "Update user email and apelido")
+    public ResponseEntity<String> updateUserEmailAndApelido(
+            @PathVariable Long id,
+            @RequestBody UpdateEmailApelidoRequest updateRequest) {
+        return usuarioService.updateEmailAndApelido(id, updateRequest);
+    }
+
 }
