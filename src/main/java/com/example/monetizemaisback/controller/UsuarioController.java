@@ -46,7 +46,7 @@ public class UsuarioController {
         return usuarioService.getUserById(id);
     }
 
-    @GetMapping("/getUser/{email}")
+    @GetMapping("/getUserByEmail/{email}")
     public ResponseEntity<Usuario> getUserByEmail(@PathVariable String email) {
         logger.info("Fetching user with email: {}", email);
         try {
