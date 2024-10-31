@@ -130,7 +130,6 @@ public class UsuarioService {
             Usuario usuario = usuarioOptional.get();
             usuario.setFotoPerfil(updateRequest.getFotoPerfil());
             usuarioRepository.save(usuario);
-
             logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getId());
             return ResponseEntity.ok("Profile picture updated successfully");
         } else {
