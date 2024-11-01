@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UpdateProfilePictureRequest {
-    private Long id;
+    private String email;
     private String fotoPerfil;
 }
