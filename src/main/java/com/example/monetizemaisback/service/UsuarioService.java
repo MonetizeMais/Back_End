@@ -124,17 +124,17 @@ public class UsuarioService {
     }
 
     public ResponseEntity<ResponseMessage> updateProfilePicture(UpdateProfilePictureRequest updateRequest) {
-        logger.info("Updating profile picture for user ID: {}", updateRequest.getId());
+        logger.info("Updating profile picture for user ID: {}", updateRequest.getEmail());
 
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(updateRequest.getId());
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(updateRequest.getEmail());
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setFotoPerfil(updateRequest.getFotoPerfil());
             usuarioRepository.save(usuario);
-            logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getId());
+            logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getEmail());
             return ResponseEntity.ok(new ResponseMessage("Profile picture updated successfully"));
         } else {
-            logger.warn("User not found with ID: {}", updateRequest.getId());
+            logger.warn("User not found with ID: {}", updateRequest.getEmail());
             return ResponseEntity.status(404).body(new ResponseMessage("User not found"));
         }
     }
