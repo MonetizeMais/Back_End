@@ -10,6 +10,7 @@ import com.example.monetizemaisback.repository.UsuarioRepository;
 import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
 import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
 import com.example.monetizemaisback.request.UserLoginRequest;
+import com.example.monetizemaisback.response.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,7 +123,7 @@ public class UsuarioService {
         }
     }
 
-    public ResponseEntity<String> updateProfilePicture(UpdateProfilePictureRequest updateRequest) {
+    public ResponseEntity<ResponseMessage> updateProfilePicture(UpdateProfilePictureRequest updateRequest) {
         logger.info("Updating profile picture for user ID: {}", updateRequest.getId());
 
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(updateRequest.getId());
@@ -131,12 +132,13 @@ public class UsuarioService {
             usuario.setFotoPerfil(updateRequest.getFotoPerfil());
             usuarioRepository.save(usuario);
             logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getId());
-            return ResponseEntity.ok("Profile picture updated successfully");
+            return ResponseEntity.ok(new ResponseMessage("Profile picture updated successfully"));
         } else {
             logger.warn("User not found with ID: {}", updateRequest.getId());
-            return ResponseEntity.status(404).body("User not found");
+            return ResponseEntity.status(404).body(new ResponseMessage("User not found"));
         }
     }
+
 
     public boolean checkUserByEmail(String email) {
         logger.info("Checking if user exists with email: {}", email);
