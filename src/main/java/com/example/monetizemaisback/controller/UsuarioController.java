@@ -8,6 +8,7 @@ import com.example.monetizemaisback.repository.UsuarioRepository;
 import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
 import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
 import com.example.monetizemaisback.request.UserLoginRequest;
+import com.example.monetizemaisback.response.ResponseMessage;
 import com.example.monetizemaisback.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -98,9 +99,10 @@ public class UsuarioController {
 
     @PutMapping("/updateProfilePicture")
     @Operation(summary = "Update user profile picture")
-    public ResponseEntity<String> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
+    public ResponseEntity<ResponseMessage> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
         return usuarioService.updateProfilePicture(updateRequest);
     }
+
 
 
     @PutMapping("/updateEmailApelido/{id}")
