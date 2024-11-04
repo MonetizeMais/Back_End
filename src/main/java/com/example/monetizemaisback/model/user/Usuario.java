@@ -43,6 +43,9 @@ public class Usuario {
     @Column(name = "pontos")
     private Integer pontos;
 
+    @Column(name = "progresso")
+    private Integer progresso;
+
     @Column(name = "cfotoperfil", length = 255)
     private String fotoPerfil;
 }
