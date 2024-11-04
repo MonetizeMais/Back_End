@@ -1,11 +1,8 @@
 package com.example.monetizemaisback.service;
 
-import com.example.monetizemaisback.model.questions.Perguntas;
-import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
-import com.example.monetizemaisback.model.user.UpdatePassword;
+
+import com.example.monetizemaisback.request.UpdatePassword;
 import com.example.monetizemaisback.model.user.Usuario;
-import com.example.monetizemaisback.repository.InfoUsuarioRepository;
-import com.example.monetizemaisback.repository.PerguntasRepository;
 import com.example.monetizemaisback.repository.UsuarioRepository;
 import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
 import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
@@ -25,9 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final InfoUsuarioRepository perguntaUsuarioRepository;
     private final UsuarioRepository usuarioRepository;
-    private final PerguntasRepository perguntasRepository;
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
     public ResponseEntity<String> createNewUser(Usuario novoUsuario) {
@@ -66,17 +61,6 @@ public class UsuarioService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    public Perguntas createNewQuestion(Perguntas novaPergunta) {
-        logger.info("Creating new question with data: {}", novaPergunta);
-        return perguntasRepository.save(novaPergunta);
-    }
-
-    public ResponseEntity<Perguntas> getQuestionById(Long id) {
-        logger.info("Fetching question with ID: {}", id);
-        return perguntasRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
     public ResponseEntity<String> login(UserLoginRequest userLoginRequest) {
         logger.info("Attempting login with email/apelido: {}", userLoginRequest.getEmail());
@@ -102,10 +86,6 @@ public class UsuarioService {
         return usuarioRepository.findAllByOrderByPontosDesc();
     }
 
-    public PerguntaUsuarioLogin createNewInfoUser(PerguntaUsuarioLogin perguntaUsuarioLogin) {
-        logger.info("Creating new info user with data: {}", perguntaUsuarioLogin);
-        return perguntaUsuarioRepository.save(perguntaUsuarioLogin);
-    }
 
     public ResponseEntity<String> updatePassword(UpdatePassword updatePasswordRequest) {
         logger.info("Updating password for user ID: {}", updatePasswordRequest.getEmail());
@@ -130,6 +110,7 @@ public class UsuarioService {
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setFotoPerfil(updateRequest.getFotoPerfil());
+
             usuarioRepository.save(usuario);
             logger.info("Profile picture updated successfully for user ID: {}", updateRequest.getEmail());
             return ResponseEntity.ok(new ResponseMessage("Profile picture updated successfully"));

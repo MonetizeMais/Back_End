@@ -1,4 +1,4 @@
-package com.example.monetizemaisback.model.user;
+package com.example.monetizemaisback.request;
 
 
 import lombok.Data;

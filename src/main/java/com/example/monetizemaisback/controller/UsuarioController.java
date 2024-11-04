@@ -1,13 +1,11 @@
 package com.example.monetizemaisback.controller;
 
-import com.example.monetizemaisback.model.questions.Perguntas;
-import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
-import com.example.monetizemaisback.model.user.UpdatePassword;
+
+import com.example.monetizemaisback.request.*;
+import com.example.monetizemaisback.service.ConteudoService;
+import com.example.monetizemaisback.model.conteudo.Conteudo;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.UsuarioRepository;
-import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
-import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
-import com.example.monetizemaisback.request.UserLoginRequest;
 import com.example.monetizemaisback.response.ResponseMessage;
 import com.example.monetizemaisback.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,16 +60,6 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping("/newQuestion")
-    public Perguntas createNewQuestion(@RequestBody Perguntas novaPergunta) {
-        return usuarioService.createNewQuestion(novaPergunta);
-    }
-
-    @GetMapping("/getQuestion/{id}")
-    public ResponseEntity<Perguntas> getQuestionById(@PathVariable Long id) {
-        return usuarioService.getQuestionById(id);
-    }
-
     @PostMapping("/userLogin")
     public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
         return usuarioService.login(userLoginRequest);
@@ -79,11 +68,6 @@ public class UsuarioController {
     @GetMapping("/getAllUsersByPoints")
     public List<Usuario> getAllUsersByPoints() {
         return usuarioService.getAllUsersByPoints();
-    }
-
-    @PostMapping("/infoUser")
-    public PerguntaUsuarioLogin createNewInfoUser(@RequestBody PerguntaUsuarioLogin perguntaUsuarioLogin) {
-        return usuarioService.createNewInfoUser(perguntaUsuarioLogin);
     }
 
     @PutMapping("/updatePassword")
@@ -103,8 +87,6 @@ public class UsuarioController {
         return usuarioService.updateProfilePicture(updateRequest);
     }
 
-
-
     @PutMapping("/updateEmailApelido/{id}")
     @Operation(summary = "Update user email and apelido")
     public ResponseEntity<String> updateUserEmailAndApelido(
@@ -113,4 +95,22 @@ public class UsuarioController {
         return usuarioService.updateEmailAndApelido(id, updateRequest);
     }
 
+
+    @PutMapping("/updateProgresso/{id}")
+    @Operation(summary = "Update user progress")
+    public ResponseEntity<String> updateProgresso(
+            @PathVariable Long id,
+            @RequestBody UpdateProgressoRequest updateProgressoRequest) {
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setProgresso(updateProgressoRequest.getProgresso());
+            usuarioRepository.save(usuario);
+            return ResponseEntity.ok("Progresso atualizado com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+    }
 }
