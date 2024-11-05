@@ -145,4 +145,20 @@ public class UsuarioService {
         return ResponseEntity.ok("Email and apelido updated successfully");
     }
 
+    public ResponseEntity<String> updateLife(String email, Integer life) {
+        logger.info("Updating life for user ID: {}", email);
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isEmpty()) {
+            logger.warn("User not found with ID: {}", email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        usuario.setVida(life);
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok("Life  updated successfully");
+    }
 }
