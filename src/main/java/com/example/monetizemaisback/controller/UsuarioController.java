@@ -101,6 +101,13 @@ public class UsuarioController {
         return usuarioService.updateEmailAndApelido(id, updateRequest);
     }
 
+        @PutMapping("/updateLife/{email}/{life}")
+    public ResponseEntity<String> updateLife(
+            @PathVariable("email") String email,
+            @PathVariable("life") Integer life) {
+        return usuarioService.updateLife(email, life);
+    }
+
 
     @PutMapping("/updateProgresso/{id}")
     @Operation(summary = "Update user progress")
