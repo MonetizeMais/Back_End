@@ -44,7 +44,7 @@ public class Usuario {
     private Integer pontos;
 
     @Column(name = "progresso")
-    private Integer progresso;
+    private Double progresso;
 
     @Column(name = "cfotoperfil", length = 255)
     private String fotoPerfil;

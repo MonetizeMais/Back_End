@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class UpdateProgressoRequest {
-    private Integer progresso;
+    private Double progresso;
 }

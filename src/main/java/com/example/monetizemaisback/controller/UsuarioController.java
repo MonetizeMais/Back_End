@@ -115,17 +115,17 @@ public class UsuarioController {
         return usuarioService.updateCoin(email, coin);
     }
 
-    @PutMapping("/updateProgresso/{id}")
+    @PutMapping("/updateProgresso/{email}/{progresso}")
     @Operation(summary = "Update user progress")
     public ResponseEntity<String> updateProgresso(
-            @PathVariable Long id,
-            @RequestBody UpdateProgressoRequest updateProgressoRequest) {
+            @PathVariable("email") String email,
+            @PathVariable("progresso") Double progresso) {
 
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
 
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
-            usuario.setProgresso(updateProgressoRequest.getProgresso());
+            usuario.setProgresso(progresso);
             usuarioRepository.save(usuario);
             return ResponseEntity.ok("Progresso atualizado com sucesso.");
         } else {
