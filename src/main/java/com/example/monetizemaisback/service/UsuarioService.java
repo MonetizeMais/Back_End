@@ -161,4 +161,19 @@ public class UsuarioService {
 
         return ResponseEntity.ok("Life  updated successfully");
     }
+
+    public ResponseEntity<String> updateCoin(String email, Integer coin) {
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        usuario.setCoin(coin);
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok("Coin updated successfully");
+    }
 }
