@@ -81,6 +81,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.checkUserByEmail(email));
     }
 
+
+    @GetMapping("/findUserByEmail/{email}")
+    public ResponseEntity<Optional<Usuario>> findUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(usuarioRepository.findByEmail(email));
+    }
+
     @PutMapping("/updateProfilePicture")
     @Operation(summary = "Update user profile picture")
     public ResponseEntity<ResponseMessage> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
