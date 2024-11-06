@@ -142,4 +142,20 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
     }
+
+    @PutMapping("/updatePontos/{email}/{pontos}")
+    @Operation(summary = "Update user progress")
+    public ResponseEntity<String> updatePontos(
+            @PathVariable("email") String email,
+            @PathVariable("pontos") Integer pontos) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setPontos(pontos);
+            usuarioRepository.save(usuario);
+            return ResponseEntity.ok("pontos atualizado com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+    }
 }
