@@ -1,9 +1,12 @@
 package com.example.monetizemaisback.controller;
 
 
-import com.example.monetizemaisback.request.*;
-import com.example.monetizemaisback.service.ConteudoService;
-import com.example.monetizemaisback.model.conteudo.Conteudo;
+import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
+import com.example.monetizemaisback.repository.PerguntaUsuarioRepository;
+import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
+import com.example.monetizemaisback.request.UpdatePassword;
+import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
+import com.example.monetizemaisback.request.UserLoginRequest;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.UsuarioRepository;
 import com.example.monetizemaisback.response.ResponseMessage;
@@ -29,12 +32,19 @@ public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
 
+    private final PerguntaUsuarioRepository perguntaUsuarioRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
     @PostMapping("/newUser")
     @Operation(summary = "Create a new user")
     public ResponseEntity<String> createNewUser(@RequestBody Usuario novoUsuario) {
         return usuarioService.createNewUser(novoUsuario);
+    }
+
+    @PostMapping("/criarPergutnaUsuarioRepository")
+    public PerguntaUsuarioLogin createNewInfoUser(@RequestBody PerguntaUsuarioLogin perguntaUsuarioLogin) {
+        return perguntaUsuarioRepository.save(perguntaUsuarioLogin);
     }
 
     @GetMapping("/getAllUsers")

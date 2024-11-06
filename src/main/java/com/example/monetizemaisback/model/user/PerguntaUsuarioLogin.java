@@ -2,6 +2,8 @@ package com.example.monetizemaisback.model.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -28,7 +30,8 @@ public class PerguntaUsuarioLogin {
     private String cpreferencias;
 
     @Id
-    @Column(name = "ncdusuario")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "nCdUsuario", nullable = false)
     private int ncdusuario;
 }
 
