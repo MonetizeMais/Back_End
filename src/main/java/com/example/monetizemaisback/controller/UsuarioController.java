@@ -158,4 +158,36 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
     }
+
+    @PutMapping("/updateEmail/{email}/{newEmail}")
+    @Operation(summary = "Update user progress")
+    public ResponseEntity<String> updateEmail(
+            @PathVariable("email") String email,
+            @PathVariable("newEmail") String newEmail) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setEmail(newEmail);
+            usuarioRepository.save(usuario);
+            return ResponseEntity.ok("email atualizado com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+    }
+
+    @PutMapping("/updateApelido/{email}/{apelido}")
+    @Operation(summary = "Update user progress")
+    public ResponseEntity<String> updateApelido(
+            @PathVariable("email") String email,
+            @PathVariable("apelido") String apelido) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setApelido(apelido);
+            usuarioRepository.save(usuario);
+            return ResponseEntity.ok("apelido atualizado com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+    }
 }
