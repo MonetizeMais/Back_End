@@ -1,12 +1,9 @@
 package com.example.monetizemaisback.service;
 
 
-import com.example.monetizemaisback.request.UpdatePassword;
+import com.example.monetizemaisback.request.*;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.UsuarioRepository;
-import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
-import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
-import com.example.monetizemaisback.request.UserLoginRequest;
 import com.example.monetizemaisback.response.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -86,6 +83,22 @@ public class UsuarioService {
         return usuarioRepository.findAllByOrderByPontosDesc();
     }
 
+    public ResponseEntity<String> updateStats(String email, UpdateStatsRequest statsRequest) {
+        logger.info("Updating password for user ID: {}", email);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+
+        if(usuarioOptional.isPresent()) {
+            Usuario user = usuarioOptional.get();
+            user.setVida(statsRequest.getVida());
+            user.setCoin(statsRequest.getCoin());
+            usuarioRepository.save(user);
+            logger.info("Password updated successfully for user ID: {}", email);
+            return ResponseEntity.ok("Password updated successfully");
+        } else {
+            logger.warn("User not found with ID: {}", email);
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
 
     public ResponseEntity<String> updatePassword(UpdatePassword updatePasswordRequest) {
         logger.info("Updating password for user ID: {}", updatePasswordRequest.getEmail());

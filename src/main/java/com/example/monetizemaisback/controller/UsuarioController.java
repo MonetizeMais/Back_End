@@ -3,10 +3,7 @@ package com.example.monetizemaisback.controller;
 
 import com.example.monetizemaisback.model.user.PerguntaUsuarioLogin;
 import com.example.monetizemaisback.repository.PerguntaUsuarioRepository;
-import com.example.monetizemaisback.request.UpdateEmailApelidoRequest;
-import com.example.monetizemaisback.request.UpdatePassword;
-import com.example.monetizemaisback.request.UpdateProfilePictureRequest;
-import com.example.monetizemaisback.request.UserLoginRequest;
+import com.example.monetizemaisback.request.*;
 import com.example.monetizemaisback.model.user.Usuario;
 import com.example.monetizemaisback.repository.UsuarioRepository;
 import com.example.monetizemaisback.response.ResponseMessage;
@@ -97,6 +94,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioRepository.findByEmail(email));
     }
 
+    @PutMapping("/updateStats/{email}")
+    @Operation(summary = "Update the user stats")
+    public ResponseEntity<String> updateStats(@RequestBody UpdateStatsRequest statsRequest, @PathVariable String email) {
+        return usuarioService.updateStats(email, statsRequest);
+    }
+
     @PutMapping("/updateProfilePicture")
     @Operation(summary = "Update user profile picture")
     public ResponseEntity<ResponseMessage> updateProfilePicture(@RequestBody UpdateProfilePictureRequest updateRequest) {
@@ -129,13 +132,19 @@ public class UsuarioController {
     @Operation(summary = "Update user progress")
     public ResponseEntity<String> updateProgresso(
             @PathVariable("email") String email,
-            @PathVariable("progresso") Double progresso) {
+            @PathVariable("progresso") Double progresso,
+            @RequestBody(required = false) UpdateProgressoRequest progressoRequest) {
 
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
 
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             usuario.setProgresso(progresso);
+
+            if (progressoRequest != null && progressoRequest.getCoin() != null) {
+                usuario.setCoin(progressoRequest.getCoin());
+            }
+
             usuarioRepository.save(usuario);
             return ResponseEntity.ok("Progresso atualizado com sucesso.");
         } else {
